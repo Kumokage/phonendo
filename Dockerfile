@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 
 # Install curl for healthcheck and wget for certificates
-RUN apt-get -y update; \ 
+RUN apt-get -y update; \
     apt-get --no-install-recommends -y install curl=7.81.0; \
     && rm -rf /var/lib/apt/lists/*
 

@@ -1,0 +1,17 @@
+version: "3.9"
+name: dev-phonendo-server
+
+services:
+  server:
+    build: .
+    container_name: server
+    restart: unless-stopped
+    command: uvicorn loader:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./:/code
+    ports:
+      - 8000:8000
+    environment:
+      - SECRET_KEY=b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdH
+    healthcheck:
+      test: "curl -f http://localhost:8000/healthcheck || exit 1"
