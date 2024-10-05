@@ -1,9 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 
 router = APIRouter()
 
 
 @router.post("/", tags=["Listner"])
-async def stop_solver():
+async def post_data(request: Request):
     return 200
