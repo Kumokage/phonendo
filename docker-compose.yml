@@ -1,4 +1,3 @@
-version: "3.9"
 name: dev-phonendo-server
 
 services:
@@ -12,7 +11,9 @@ services:
     ports:
       - 8000:8000
     environment:
-      - SECRET_KEY=b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdH
+      - MINIO_SERVER_ACCESS_KEY=ceVKdZ6AhWQmQsPSRg9P
+      - MINIO_SERVER_SECRET_KEY=ylTuFgm3gI6WxjnoU8Yz8iEKB19pxtsgsUQNlAmV
+      - XAPIKey=b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdH
     healthcheck:
       test: "curl -f http://localhost:8000/healthcheck || exit 1"
   minio:
