@@ -21,9 +21,9 @@ class PhonendoParams(BaseModel):
     date: str
     time: str
     record_name: str
-    volume: int
-    sign_id: int
-    sign_level: int
+    volume: float
+    sign_id: float
+    sign_level: float
     conclusion: str
 
 
