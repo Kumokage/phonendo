@@ -25,6 +25,7 @@ class PhonendoParams(BaseModel):
     sign_id: float
     sign_level: float
     conclusion: str
+    history_id: str
 
 
 class PhonendoData(BaseModel):
