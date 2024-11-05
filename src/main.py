@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 from fastapi import APIRouter, Header, Response
 from fastapi_pagination import Page, paginate
-from typing import Annotated
+from typing import Annotated, Optional
 from pydantic import BaseModel
 from minio import Minio
 from minio.error import S3Error
@@ -25,7 +25,7 @@ class PhonendoParams(BaseModel):
     sign_id: float
     sign_level: float
     conclusion: str
-    history_id: str
+    history_id: Optional[str] = None
 
 
 class PhonendoData(BaseModel):
