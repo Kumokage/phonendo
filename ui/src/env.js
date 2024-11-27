@@ -11,9 +11,13 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    AUTH_DISCORD_ID: z.string(),
-    AUTH_DISCORD_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
+    EMAIL_SERVER: z.string(),
+    EMAIL_FROM: z.string(),
+    YANDEX_CLIENT_ID: z.string(),
+    YANDEX_CLIENT_SECRET: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -34,9 +38,13 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
-    AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
-    AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    EMAIL_SERVER: process.env.EMAIL_SERVER,
+    EMAIL_FROM: process.env.EMAIL_FROM,
+    YANDEX_CLIENT_ID: process.env.YANDEX_CLIENT_ID,
+    YANDEX_CLIENT_SECRET: process.env.YANDEX_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

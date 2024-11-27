@@ -14,6 +14,29 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model JournalRecord {
+    id           String   @id
+    bodie        String
+    date         String
+    time         String
+    record_name  String
+    volume       Float
+    sign_id      Float
+    sign_level   Float
+    conclusion   String
+    history_id   String?
+    phonendoId   String
+    base64Record String
+    recordName   String
+    usageDate    DateTime
+    recordType   String
+    patient      User     @relation(name: "patient_relation", fields: [patientd_id], references: [id])
+    patientd_id  String
+    doctor       User     @relation(name: "doctor_relation", fields: [doctor_id], references: [id])
+    doctor_id    String
+    ml_result    Float
+}
+
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -43,13 +66,17 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id                      String          @id @default(cuid())
+    name                    String?
+    email                   String?         @unique
+    emailVerified           DateTime?
+    image                   String?
+    accounts                Account[]
+    sessions                Session[]
+    role                    Role            @default(PATIENT)
+    phonendo_id             String?
+    patient_journal_records JournalRecord[] @relation("patient_relation")
+    doctor_joutnal_records  JournalRecord[] @relation("doctor_relation")
 }
 
 model VerificationToken {
@@ -58,4 +85,10 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum Role {
+    PATIENT
+    RELATIVE
+    DOCTOR
 }
