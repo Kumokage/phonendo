@@ -7,6 +7,12 @@ import { env } from "~/env";
 
 import { db } from "~/server/db";
 
+export enum UserRole {
+  PATIENT,
+  RELATIVE,
+  DOCTOR,
+}
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -17,8 +23,8 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: UserRole;
+      phonendo_id: string;
     } & DefaultSession["user"];
   }
 
