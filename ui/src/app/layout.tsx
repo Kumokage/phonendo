@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import TitleBar from "./_components/TitleBar";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Phonendo UI",
@@ -17,10 +18,16 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
+      <body className="h-screen bg-gray-50">
         <TRPCReactProvider>
-          <TitleBar />
-          {children}
+          <div className="flex h-full flex-col">
+            <div className="basis-1/12">
+              <TitleBar />
+            </div>
+            <div className="basis-11/12">
+              <SessionProvider>{children}</SessionProvider>
+            </div>
+          </div>
         </TRPCReactProvider>
       </body>
     </html>
