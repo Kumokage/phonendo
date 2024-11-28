@@ -1,29 +1,44 @@
 "use client";
 import { Button, Label, TextInput } from "flowbite-react";
-import { FormEvent } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { FormEvent, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
+import { UserRole } from "~/server/auth/definitions";
 
 export default function EditUser() {
   const { data: session, status: sessionStatus } = useSession();
   const setPhonendoId = api.post.setPhonendoId.useMutation();
   const router = useRouter();
 
-  if (sessionStatus === "unauthenticated") {
-    signIn();
-  }
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      router.push("/api/auth/signin");
+    }
+    if (session && session?.user.phonendo_id !== null) {
+      switch (UserRole[session.user.role] as any) {
+        case UserRole.DOCTOR:
+          router.replace("/doctor");
+          break;
+        case UserRole.PATIENT:
+          router.replace(`/patient/${session?.user.id}`);
+          break;
+      }
+    }
+  }, [sessionStatus]);
 
-  if (setPhonendoId.isSuccess) {
-    router.push(`/patient/${session?.user.id}`);
-  }
+  useEffect(() => {
+    if (setPhonendoId.isSuccess) {
+      router.replace(`/patient/${session?.user.id}`);
+    }
+  }, [setPhonendoId.isSuccess]);
 
   const onFormSubmite = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const phonendoId = formData.get("phonendoId");
     if (session?.user && phonendoId) {
-      setPhonendoId.mutate({
+      await setPhonendoId.mutateAsync({
         userId: session.user.id,
         phonendoId: phonendoId.toString(),
       });

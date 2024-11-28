@@ -6,12 +6,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { env } from "~/env";
 
 import { db } from "~/server/db";
-
-export enum UserRole {
-  PATIENT,
-  RELATIVE,
-  DOCTOR,
-}
+import { UserRole } from "./definitions";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -24,7 +19,7 @@ declare module "next-auth" {
     user: {
       id: string;
       role: UserRole;
-      phonendo_id: string;
+      phonendo_id?: string;
     } & DefaultSession["user"];
   }
 
@@ -74,3 +69,4 @@ export const authConfig = {
     }),
   },
 } satisfies NextAuthConfig;
+export { UserRole };

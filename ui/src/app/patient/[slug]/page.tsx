@@ -4,6 +4,8 @@ import UserCondition from "~/app/_components/UserCondition";
 import UserPersonalInfo from "~/app/_components/UserPersonalInfo";
 import { auth } from "~/server/auth";
 import { Spinner } from "flowbite-react";
+import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default async function PatientJournal({
   params,
@@ -11,6 +13,15 @@ export default async function PatientJournal({
   params: Promise<{ slug: string }>;
 }) {
   const session = await auth();
+
+  if (session === null) {
+    redirect("/api/auth/signin");
+  }
+
+  if (session.user.phonendo_id === null) {
+    redirect("/auth/edit");
+  }
+
   const userId = (await params).slug;
   return (
     <>
