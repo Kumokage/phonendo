@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import TitleBar from "./_components/TitleBar";
 
 export const metadata: Metadata = {
   title: "Phonendo UI",
@@ -17,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <TitleBar />
+          {children}
+        </TRPCReactProvider>
       </body>
     </html>
   );
