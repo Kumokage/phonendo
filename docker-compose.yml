@@ -7,12 +7,13 @@ services:
       dockerfile: ./Dockerfile
     container_name: server
     restart: unless-stopped
-    command: uvicorn phonendo-server:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn server.src:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./server/:/code/server
     ports:
       - 8000:8000
     environment:
+      - DBURL=postgresql://postgres:zaSIvdFHypFk5Uz7@db:5432/ui
       - MINIO_SERVER_ACCESS_KEY=ceVKdZ6AhWQmQsPSRg9P
       - MINIO_SERVER_SECRET_KEY=ylTuFgm3gI6WxjnoU8Yz8iEKB19pxtsgsUQNlAmV
       - XAPIKey=b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdH
@@ -29,5 +30,18 @@ services:
     volumes:
       - minio_storage:/data
     command: server --console-address ":9001" /data
+  db:
+    image: postgres
+    container_name: dev_db
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=zaSIvdFHypFk5Uz7
+      - POSTGRES_DB=ui
 volumes:
+  postgres_data:
   minio_storage: {}

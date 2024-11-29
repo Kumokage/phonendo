@@ -26,14 +26,13 @@ model JournalRecord {
     conclusion   String
     history_id   String?
     phonendoId   String
-    base64Record String
     recordName   String
     usageDate    DateTime
     recordType   String
-    patient      User     @relation(name: "patient_relation", fields: [patientd_id], references: [id])
-    patientd_id  String
-    doctor       User     @relation(name: "doctor_relation", fields: [doctor_id], references: [id])
-    doctor_id    String
+    patient      User?    @relation(name: "patient_relation", fields: [patient_id], references: [phonendo_id])
+    patient_id   String?
+    doctor       User?    @relation(name: "doctor_relation", fields: [doctor_id], references: [phonendo_id])
+    doctor_id    String?
     ml_result    Float
 }
 
@@ -77,6 +76,8 @@ model User {
     phonendo_id             String?
     patient_journal_records JournalRecord[] @relation("patient_relation")
     doctor_joutnal_records  JournalRecord[] @relation("doctor_relation")
+
+    @@unique([phonendo_id])
 }
 
 model VerificationToken {

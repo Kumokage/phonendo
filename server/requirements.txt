@@ -3,3 +3,9 @@ pydantic==2.6.2
 uvicorn==0.27.1
 minio==7.2.9
 fastapi-pagination==0.12.29
+sqlmodel==0.0.22
+psycopg2-binary==2.9.10
+## Data analyze
+numpy==2.1.3
+scipy==1.14.1
+soundfile==0.12.1
