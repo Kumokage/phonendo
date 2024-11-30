@@ -34,19 +34,21 @@ services:
     volumes:
       - minio_storage:/data
     command: server --console-address ":9001" /data
-  web:
-    container_name: web
+  ui:
+    container_name: ui
     platform: "linux/amd64"
     build:
       context: ./ui/
       dockerfile: Dockerfile
-      args:
-        DATABASE_URL: postgresql://postgres:zaSIvdFHypFk5Uz7@db:5432/ui
     working_dir: /app
     image: phonedo-ui
     environment:
       - DATABASE_URL=postgresql://postgres:zaSIvdFHypFk5Uz7@db:5432/ui
+      - AUTH_TRUST_HOST=http://localhost:3000
+      - NEXTAUTH_URL=http://localhost:3000/api/auth
     restart: unless-stopped
+    ports:
+      - 3000:3000
     depends_on:
       - db
   prisma_util:
@@ -54,8 +56,6 @@ services:
     build:
       context: ./ui/
       dockerfile: ./utils/prisma-push/Dockerfile
-      args:
-        DATABASE_URL: postgresql://postgres:zaSIvdFHypFk5Uz7@db:5432/ui
     image: phonendo-prisma-util
     environment:
       - DATABASE_URL=postgresql://postgres:zaSIvdFHypFk5Uz7@db:5432/ui

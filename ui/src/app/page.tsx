@@ -16,5 +16,7 @@ export default async function Home() {
       default:
         redirect(`/patient/${session.user.id}`);
     }
+  } else {
+    redirect("/api/auth/signin");
   }
 }
