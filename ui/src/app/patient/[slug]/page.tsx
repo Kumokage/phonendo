@@ -5,7 +5,6 @@ import UserPersonalInfo from "~/app/_components/UserPersonalInfo";
 import { auth } from "~/server/auth";
 import { Spinner } from "flowbite-react";
 import { redirect } from "next/navigation";
-import { signIn } from "next-auth/react";
 
 export default async function PatientJournal({
   params,
@@ -22,7 +21,7 @@ export default async function PatientJournal({
     redirect("/auth/edit");
   }
 
-  const userId = (await params).slug;
+  // const userId = (await params).slug;
   return (
     <>
       {session !== null ? (

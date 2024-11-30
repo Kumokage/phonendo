@@ -36,11 +36,11 @@ export default function EditUser() {
   const onFormSubmite = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const phonendoId = formData.get("phonendoId");
+    const phonendoId = formData.get("phonendoId")?.toString();
     if (session?.user && phonendoId) {
       await setPhonendoId.mutateAsync({
         userId: session.user.id,
-        phonendoId: phonendoId.toString(),
+        phonendoId: phonendoId,
       });
     }
   };
