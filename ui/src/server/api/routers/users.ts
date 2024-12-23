@@ -59,7 +59,6 @@ export const userRouter = createTRPCRouter({
       )
         .map((v) => v.patient_id)
         .filter((v) => v != null);
-      console.log(patients);
       return (
         (await ctx.db.user.findMany({
           where: {

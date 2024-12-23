@@ -25,7 +25,6 @@ export default function DoctorPatients() {
       : skipToken,
   );
 
-  console.log(patientsData.data);
   return (
     <div>
       {session && patientsData.data ? (
