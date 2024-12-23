@@ -44,7 +44,7 @@ class PhonendoData(BaseModel):
 
 
 class JournalRecord(SQLModel, table=True):
-    __tablename__ = "JournalRecord" # type: ignore
+    __tablename__ = "JournalRecord"  # type: ignore
     __table_args__ = {"extend_existing": True}
     id: str = Field(default=None, primary_key=True)
     bodie: str
@@ -61,6 +61,8 @@ class JournalRecord(SQLModel, table=True):
     usageDate: datetime
     recordType: str
     ml_result: float
+    patient_id: int
+    doctor_id: int
 
 
 XAPIKey = os.getenv("XAPIKey")
@@ -89,12 +91,16 @@ def save_to_db(
             usageDate=data.usageDate,
             recordType=data.recordType,
             ml_result=ml_result,
+            patient_id=data.params.pacient_id,
+            doctor_id=data.params.doctor_id,
         )
         with Session(engine) as session:
             session.add(new_record)
             session.commit()
-    except exc.SQLAlchemyError:
-        pass
+    except exc.SQLAlchemyError as e:
+        print(e)
+    except Exception as e:
+        print(e)
 
 
 @router.post(

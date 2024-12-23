@@ -6,34 +6,34 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+    provider     = "postgresql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 model JournalRecord {
-    id           String   @id
-    bodie        String
-    date         String
-    time         String
-    record_name  String
-    volume       Float
-    sign_id      Float
-    sign_level   Float
-    conclusion   String
-    history_id   String?
-    phonendoId   String
-    recordName   String
-    usageDate    DateTime
-    recordType   String
-    patient      User?    @relation(name: "patient_relation", fields: [patient_id], references: [phonendo_id])
-    patient_id   String?
-    doctor       User?    @relation(name: "doctor_relation", fields: [doctor_id], references: [phonendo_id])
-    doctor_id    String?
-    ml_result    Float
+    id          String   @id
+    bodie       String
+    date        String
+    time        String
+    record_name String
+    volume      Float
+    sign_id     Float
+    sign_level  Float
+    conclusion  String
+    history_id  String?
+    phonendoId  String
+    recordName  String
+    usageDate   DateTime
+    recordType  String
+    patient     User?    @relation(name: "patient_relation", fields: [patient_id], references: [phonendo_id])
+    patient_id  Int?
+    doctor      User?    @relation(name: "doctor_relation", fields: [doctor_id], references: [phonendo_id])
+    doctor_id   Int?
+    ml_result   Float
+
+    @@index([patient_id])
+    @@index([doctor_id])
 }
 
 // Necessary for Next auth
@@ -54,6 +54,7 @@ model Account {
     refresh_token_expires_in Int?
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -62,6 +63,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
@@ -73,7 +76,7 @@ model User {
     accounts                Account[]
     sessions                Session[]
     role                    Role            @default(PATIENT)
-    phonendo_id             String?
+    phonendo_id             Int?
     patient_journal_records JournalRecord[] @relation("patient_relation")
     doctor_joutnal_records  JournalRecord[] @relation("doctor_relation")
 
