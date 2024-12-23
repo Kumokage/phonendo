@@ -1,6 +1,6 @@
 "use client";
 import { Button, Label, TextInput } from "flowbite-react";
-import { FormEvent, useEffect } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { UserRole } from "~/server/auth/definitions";
 export default function EditUser() {
   const { data: session, status: sessionStatus } = useSession();
   const setPhonendoId = api.post.setPhonendoId.useMutation();
+  const [isError, setIsError] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,23 +26,25 @@ export default function EditUser() {
           break;
       }
     }
-  }, [sessionStatus]);
+  }, [sessionStatus, router, session]);
 
   useEffect(() => {
     if (setPhonendoId.isSuccess) {
       router.replace(`/patient/${session?.user.id}`);
     }
-  }, [setPhonendoId.isSuccess]);
+  }, [router, session?.user.id, setPhonendoId.isSuccess]);
 
   const onFormSubmite = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const phonendoId = formData.get("phonendoId")?.toString();
-    if (session?.user && phonendoId) {
+    const phonendoId = Number(formData.get("phonendoId"));
+    if (session?.user && !isNaN(phonendoId)) {
       await setPhonendoId.mutateAsync({
         userId: session.user.id,
         phonendoId: phonendoId,
       });
+    } else {
+      setIsError(true);
     }
   };
 
@@ -57,9 +60,11 @@ export default function EditUser() {
             id="phonendoId"
             name="phonendoId"
             placeholder="Идентификатор"
-            color={setPhonendoId.isError ? "failure" : "gray"}
+            color={setPhonendoId.isError || isError ? "failure" : "gray"}
             helperText={
-              setPhonendoId.isError ? "Некорректный идентификатор" : ""
+              setPhonendoId.isError || isError
+                ? "Некорректный идентификатор"
+                : ""
             }
             required
           />
