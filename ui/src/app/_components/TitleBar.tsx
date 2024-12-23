@@ -38,7 +38,7 @@ export default function TitleBar() {
         {isShow && (
           <Button
             onClick={() => {
-              router.push("api/auth/signout");
+              router.push("/api/auth/signout");
             }}
             color={"red"}
             size="sm"
