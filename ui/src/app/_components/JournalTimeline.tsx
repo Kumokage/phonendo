@@ -1,15 +1,13 @@
 "use client";
+import { type JournalRecord } from "@prisma/client";
 import { Timeline } from "flowbite-react";
 
-export default function JournalTimeline() {
-  const journalRecords = [
-    {
-      time: "12:55:31",
-      date: "2024-09-03",
-      diseaseRisk: 0.54,
-      conclusion: "Some doctor conclusion",
-    },
-  ];
+type JournalTimelineParams = {
+  journalRecords: Array<JournalRecord>;
+};
+export default function JournalTimeline({
+  journalRecords,
+}: JournalTimelineParams) {
   return (
     <Timeline>
       {journalRecords.map((record, key) => {
@@ -21,7 +19,7 @@ export default function JournalTimeline() {
                 {record.date} {record.time}
               </Timeline.Time>
               <Timeline.Title>
-                Вероятность трамбоза {record.diseaseRisk}
+                Вероятность трамбоза {record.ml_result}
               </Timeline.Title>
               {record.conclusion && record.conclusion.length !== 0 && (
                 <Timeline.Content>{record.conclusion}</Timeline.Content>

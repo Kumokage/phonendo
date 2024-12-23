@@ -8,7 +8,7 @@ import { UserRole } from "~/server/auth/definitions";
 
 export default function EditUser() {
   const { data: session, status: sessionStatus } = useSession();
-  const setPhonendoId = api.post.setPhonendoId.useMutation();
+  const setPhonendoId = api.user.setPhonendoId.useMutation();
   const [isError, setIsError] = useState(false);
   const router = useRouter();
 

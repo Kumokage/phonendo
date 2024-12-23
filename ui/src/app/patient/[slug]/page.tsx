@@ -1,18 +1,15 @@
 import Image from "next/image";
 import JournalTimeline from "~/app/_components/JournalTimeline";
 import UserCondition from "~/app/_components/UserCondition";
-import UserPersonalInfo from "~/app/_components/UserPersonalInfo";
 import { auth } from "~/server/auth";
 import { Spinner } from "flowbite-react";
 import { redirect } from "next/navigation";
+import { api } from "~/trpc/server";
 
-export default async function PatientJournal({
-  params,
-}: {
+export default async function PatientJournal({}: {
   params: Promise<{ slug: string }>;
 }) {
   const session = await auth();
-
   if (session === null) {
     redirect("/api/auth/signin");
   }
@@ -20,11 +17,12 @@ export default async function PatientJournal({
   if (session.user.phonendo_id === null) {
     redirect("/auth/edit");
   }
+  const userData = await api.user.getPatientData({ userId: session.user.id });
+  console.log(userData);
 
-  // const userId = (await params).slug;
   return (
     <>
-      {session !== null ? (
+      {session !== null && userData ? (
         <div className="flex flex-row gap-8">
           <div className="flex basis-1/2 flex-col items-start gap-8 px-10 py-1.5">
             <div className="flex flex-row items-center justify-evenly gap-32">
@@ -45,12 +43,15 @@ export default async function PatientJournal({
               </div>
             </div>
             <div className="rounded-2xl border-2 border-gray-400 px-14 py-4">
-              <UserCondition userId={session.user.id} />
+              <UserCondition
+                diseaseRisk={userData.patient_journal_records[0]?.ml_result}
+              />
             </div>
-            <UserPersonalInfo />
           </div>
           <div className="basis-1/2 py-5 ps-14">
-            <JournalTimeline />
+            <JournalTimeline
+              journalRecords={userData?.patient_journal_records}
+            />
           </div>
         </div>
       ) : (
