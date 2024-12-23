@@ -23,13 +23,14 @@ RUN \
 
 FROM --platform=linux/amd64 node:20-alpine AS builder
 ARG DATABASE_URL
-ARG NEXT_PUBLIC_CLIENTVAR
+ARG NEXT_PUBLIC_DOCTOR_SECRET_KEY
+ARG NEXT_PUBLIC_ML_THRESHOLD
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN apk add --no-cache libc6-compat openssl
 # ENV NEXT_TELEMETRY_DISABLED 1
-
 RUN \
     if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn build; \
     elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build; \
@@ -54,6 +55,7 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY prisma ./
 
+RUN apk add --no-cache libc6-compat openssl
 EXPOSE 3000
 ENV PORT 3000
 
