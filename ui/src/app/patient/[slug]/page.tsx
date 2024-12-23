@@ -5,11 +5,15 @@ import { auth } from "~/server/auth";
 import { Spinner } from "flowbite-react";
 import { redirect } from "next/navigation";
 import { api } from "~/trpc/server";
+import { Role } from "@prisma/client";
 
-export default async function PatientJournal({}: {
+export default async function PatientJournal({
+  params,
+}: {
   params: Promise<{ slug: string }>;
 }) {
   const session = await auth();
+  const slug = (await params).slug;
   if (session === null) {
     redirect("/api/auth/signin");
   }
@@ -17,7 +21,8 @@ export default async function PatientJournal({}: {
   if (session.user.phonendo_id === null) {
     redirect("/auth/edit");
   }
-  const userData = await api.user.getPatientData({ userId: session.user.id });
+  const userId = session.user.role === Role.DOCTOR ? slug : session.user.id;
+  const userData = await api.user.getPatientData({ userId: userId });
 
   return (
     <>
@@ -27,17 +32,17 @@ export default async function PatientJournal({}: {
             <div className="flex flex-row items-center justify-evenly gap-32">
               <Image
                 className="rounded-full"
-                src={session.user.image ?? "/placeholder.jpg"}
+                src={userData.image ?? "/placeholder.jpg"}
                 alt="User image"
                 width={100}
                 height={100}
               />
               <div className="flex flex-col justify-between gap-1 text-xl font-normal">
                 <p className="rounded-md border border-gray-400 px-4 py-1.5">
-                  {session.user.name}
+                  {userData.name}
                 </p>
                 <p className="rounded-md border border-gray-400 px-4 py-1.5">
-                  {session.user.email}
+                  {userData.email}
                 </p>
               </div>
             </div>
