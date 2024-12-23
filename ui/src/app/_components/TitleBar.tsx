@@ -8,7 +8,7 @@ export default async function TitleBar() {
     <div className="flex flex-row items-center justify-between border-b px-3 py-1.5">
       <Image
         className="rounded-full"
-        src="/placeholder.jpg"
+        src="/stethoscope.jpg"
         alt="Platform logo"
         width={imageSize}
         height={imageSize}
