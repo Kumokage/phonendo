@@ -20,14 +20,14 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="h-screen bg-gray-50">
         <TRPCReactProvider>
-          <div className="flex h-full flex-col">
-            <div className="basis-1/12">
-              <TitleBar />
+          <SessionProvider>
+            <div className="flex h-full flex-col">
+              <div className="basis-1/12">
+                <TitleBar />
+              </div>
+              <div className="basis-11/12">{children}</div>
             </div>
-            <div className="basis-11/12">
-              <SessionProvider>{children}</SessionProvider>
-            </div>
-          </div>
+          </SessionProvider>
         </TRPCReactProvider>
       </body>
     </html>
