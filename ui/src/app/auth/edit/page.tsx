@@ -1,15 +1,18 @@
 "use client";
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, TextInput, ToggleSwitch } from "flowbite-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { UserRole } from "~/server/auth/definitions";
+import { env } from "~/env";
 
 export default function EditUser() {
   const { data: session, status: sessionStatus } = useSession();
   const setPhonendoId = api.user.setPhonendoId.useMutation();
   const [isError, setIsError] = useState(false);
+  const [isKeyError, setIsKeyError] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,18 +33,32 @@ export default function EditUser() {
 
   useEffect(() => {
     if (setPhonendoId.isSuccess) {
-      router.replace(`/patient/${session?.user.id}`);
+      if (isDoctor) {
+        router.replace(`/doctor`);
+      } else {
+        router.replace(`/patient/${session?.user.id}`);
+      }
     }
-  }, [router, session?.user.id, setPhonendoId.isSuccess]);
+  }, [router, session?.user.id, setPhonendoId.isSuccess, isDoctor]);
 
   const onFormSubmite = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const phonendoId = Number(formData.get("phonendoId"));
+
+    if (isDoctor) {
+      const doctorKey = formData.get("doctorKey")?.toString();
+      if (doctorKey != env.NEXT_PUBLIC_DOCTOR_SECRET_KEY) {
+        setIsKeyError(true);
+        return;
+      }
+    }
+
     if (session?.user && !isNaN(phonendoId)) {
       await setPhonendoId.mutateAsync({
         userId: session.user.id,
         phonendoId: phonendoId,
+        isDoctor: isDoctor,
       });
     } else {
       setIsError(true);
@@ -69,6 +86,26 @@ export default function EditUser() {
             required
           />
         </div>
+        <ToggleSwitch
+          label="Являетесь ли вы доктором?"
+          checked={isDoctor}
+          onChange={setIsDoctor}
+        />
+        {isDoctor && (
+          <div>
+            <div className="mb-2 block text-lg">
+              <Label htmlFor="phonendoId" value="Код подтверждения" />
+            </div>
+            <TextInput
+              id="doctorKey"
+              name="doctorKey"
+              placeholder="Код"
+              color={isKeyError ? "failure" : "gray"}
+              helperText={isKeyError ? "Некорректный код" : ""}
+              required
+            />
+          </div>
+        )}
         <Button type="submit">Сохранить</Button>
       </form>
     </div>

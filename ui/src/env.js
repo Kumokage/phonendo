@@ -29,7 +29,8 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_DOCTOR_SECRET_KEY: z.string(),
+    NEXT_PUBLIC_ML_THRESHOLD: z.number(),
   },
 
   /**
@@ -45,6 +46,8 @@ export const env = createEnv({
     YANDEX_CLIENT_SECRET: process.env.YANDEX_CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    NEXT_PUBLIC_DOCTOR_SECRET_KEY: process.env.NEXT_PUBLIC_DOCTOR_SECRET_KEY,
+    NEXT_PUBLIC_ML_THRESHOLD: Number(process.env.NEXT_PUBLIC_ML_THRESHOLD),
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

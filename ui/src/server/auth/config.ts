@@ -19,7 +19,7 @@ declare module "next-auth" {
     user: {
       id: string;
       role: UserRole;
-      phonendo_id?: string;
+      phonendo_id?: number;
     } & DefaultSession["user"];
   }
 

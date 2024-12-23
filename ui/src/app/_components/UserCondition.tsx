@@ -1,11 +1,12 @@
 import { HiFire, HiHeart } from "react-icons/hi";
+import { env } from "~/env";
 
 type UserConditionProps = {
   diseaseRisk?: number;
 };
 
 export default function UserCondition({ diseaseRisk }: UserConditionProps) {
-  const THRESHOLD = 0.5;
+  const THRESHOLD = env.NEXT_PUBLIC_ML_THRESHOLD;
 
   return (
     <div className="flex flex-row items-center">

@@ -18,7 +18,6 @@ export default async function PatientJournal({}: {
     redirect("/auth/edit");
   }
   const userData = await api.user.getPatientData({ userId: session.user.id });
-  console.log(userData);
 
   return (
     <>
@@ -34,12 +33,12 @@ export default async function PatientJournal({}: {
                 height={100}
               />
               <div className="flex flex-col justify-between gap-1 text-xl font-normal">
-                <span className="rounded-md border border-gray-400 px-2 py-1">
+                <p className="rounded-md border border-gray-400 px-4 py-1.5">
                   {session.user.name}
-                </span>
-                <span className="rounded-md border border-gray-400 px-2 py-1">
+                </p>
+                <p className="rounded-md border border-gray-400 px-4 py-1.5">
                   {session.user.email}
-                </span>
+                </p>
               </div>
             </div>
             <div className="rounded-2xl border-2 border-gray-400 px-14 py-4">
