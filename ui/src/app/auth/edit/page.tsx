@@ -4,8 +4,8 @@ import { type FormEvent, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { UserRole } from "~/server/auth/definitions";
 import { env } from "~/env";
+import { Role } from "@prisma/client";
 
 export default function EditUser() {
   const { data: session, status: sessionStatus } = useSession();
@@ -20,11 +20,11 @@ export default function EditUser() {
       router.push("/api/auth/signin");
     }
     if (session && session?.user.phonendo_id !== null) {
-      switch (UserRole[session.user.role] as any) {
-        case UserRole.DOCTOR:
+      switch (session.user.role) {
+        case Role.DOCTOR:
           router.replace("/doctor");
           break;
-        case UserRole.PATIENT:
+        case Role.PATIENT:
           router.replace(`/patient/${session?.user.id}`);
           break;
       }

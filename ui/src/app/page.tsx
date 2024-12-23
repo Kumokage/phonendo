@@ -1,6 +1,6 @@
+import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
-import { UserRole } from "~/server/auth/config";
 
 export default async function Home() {
   const session = await auth();
@@ -11,7 +11,7 @@ export default async function Home() {
     }
 
     switch (session.user.role) {
-      case UserRole.DOCTOR:
+      case Role.DOCTOR:
         redirect("/doctor");
       default:
         redirect(`/patient/${session.user.id}`);
